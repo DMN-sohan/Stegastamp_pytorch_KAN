@@ -50,8 +50,8 @@ def main():
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
     # encoder = model.StegaStampEncoder()   8.1.2023
-    encoder = model.StegaStampEncoder()
-    decoder = model.StegaStampDecoder(secret_size=args.secret_size)
+    encoder = model.StegaStampEncoderUnet()
+    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size)
     discriminator = model.Discriminator()
     lpips_alex = lpips.LPIPS(net="alex", verbose=False)
     if args.cuda:
@@ -75,8 +75,14 @@ def main():
     total_steps = len(dataset) // args.batch_size + 1
     global_step = 0
 
+    MAX_TRAINING_TIME = 11.5 * 60 * 60  # 11.5 hours in seconds
+
+    start_time = time.time()
+
     while global_step < args.num_steps:
         for _ in range(min(total_steps, args.num_steps - global_step)):
+            step_start_time = time.time()
+
             image_input, secret_input = next(iter(dataloader))
             if args.cuda:
                 image_input = image_input.cuda()
@@ -116,7 +122,42 @@ def main():
                     optimize_dis.zero_grad()
                     optimize_dis.step()
 
-            print('{:g}: Loss = {:.4f}'.format(global_step, loss))
+            step_time = time.time() - step_start_time
+            total_time_elapsed = time.time() - start_time
+            steps_remaining = args.num_steps - global_step
+            eta_seconds = (
+                (total_time_elapsed / global_step) * steps_remaining
+                if global_step > 0
+                else 0
+            )
+            eta = timedelta(seconds=int(eta_seconds))
+
+            if time.time() - start_time >= MAX_TRAINING_TIME:
+                print(
+                    f"Time limit reached. Saving checkpoint and exiting at {global_step}..."
+                )
+                torch.save(
+                    {
+                        "encoder": encoder.state_dict(),
+                        "decoder": decoder.state_dict(),
+                        "global_step": global_step,
+                        "optimizer": optimize_loss.state_dict(),
+                        "min_loss": args.min_loss,
+                        "min_secret_loss": args.min_secret_loss,
+                    },
+                    os.path.join(
+                        args.checkpoints_path, "last_timeout", f"{global_step}_checkpoint_timeout.pth"
+                    ),
+                )
+                exit(0)
+
+            if global_step % 100 == 0:
+                
+                # print(f"{global_step}/{args.num_steps} loss_scales = [l2_loss_scale = {l2_loss_scale}, lpips_loss_scale = {lpips_loss_scale}, secret_loss_scale = {secret_loss_scale}]")
+                print(
+                    f"Step: {global_step}, Time per Step: {step_time:.2f} seconds, ETA: {eta}, Loss = {loss.item():.4f}, Discriminator Loss = {D_loss.item():.4f}"
+                )
+
             if global_step % 10 == 0:
                 writer.add_scalars('Loss values', {'loss': loss.item(), 'secret loss': secret_loss.item(),
                                                    'D_loss loss': D_loss.item()})

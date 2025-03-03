@@ -1,9 +1,9 @@
 
 #train_path: 'F:\\VOCdevkit\\VOC2012\\JPEGImages'
-train_path: '<ENTER_PATH>/VOC2012/JPEGImages/' # Please enter the path to your local dataset
-logs_path: "./logs/debug/"
-checkpoints_path: './checkpoints/debug/'
-saved_models: './saved_models/debug/'
+checkpoints_path: ./checkpoints/                 # Path to save checkpoints
+logs_path: ./logs/                               # Path for logging
+saved_models: ./models/                          # Path for saving trained models
+train_path: /kaggle/input/mirflickr-1m/  
 
 cuda: True
 
