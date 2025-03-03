@@ -165,10 +165,6 @@ def main():
                     f"Step: {global_step}, Time per Step: {step_time:.2f} seconds, ETA: {eta}, Loss = {loss.item():.4f}, Discriminator Loss = {D_loss.item():.4f}"
                 )
 
-            if global_step % 10 == 0:
-                writer.add_scalars('Loss values', {'loss': loss.item(), 'secret loss': secret_loss.item(),
-                                                   'D_loss loss': D_loss.item()})
-
             # Get checkpoints:
             if global_step % CHECKPOINT_MARK_1 == 0:
                 torch.save(encoder, os.path.join(args.saved_models, "encoder.pth"))

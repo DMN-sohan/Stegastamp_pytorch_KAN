@@ -424,8 +424,8 @@ def build_model(encoder, decoder, discriminator, lpips_fn, secret_input, image_i
     writer.add_scalar('loss/G_loss', G_loss, global_step)
     writer.add_scalar('loss/loss', loss, global_step)
 
-    writer.add_scalar('metric/bit_acc', bit_acc, global_step)
-    writer.add_scalar('metric/str_acc', str_acc, global_step)
+    writer.add_scalar('accuracy/bit', bit_acc, global_step)
+    writer.add_scalar('accuracy/string', str_acc, global_step)
 
     writer.add_scalar('loss/avg_enc', avg_encoded, global_step)
     writer.add_scalar('loss/avg_img', avg_image, global_step)
