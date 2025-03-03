@@ -12,7 +12,7 @@ class StegaData(Dataset):
         self.data_path = data_path
         self.secret_size = secret_size
         self.size = size
-        self.files_list = glob(os.path.join(self.data_path, '*.jpg'))
+        self.files_list = glob(os.path.join(self.data_path, 'images*/images/*/*.jpg'))
         self.to_tensor = transforms.ToTensor()
 
     def __getitem__(self, idx):
