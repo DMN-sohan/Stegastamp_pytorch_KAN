@@ -13,6 +13,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import lpips
+import time
 
 CHECKPOINT_MARK_1 = 10_000
 CHECKPOINT_MARK_2 = 1500
