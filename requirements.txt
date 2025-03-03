@@ -1,0 +1,14 @@
+numpy
+Pillow
+torch
+torchvision
+torchgeometry
+kornia
+easydict
+lpips
+opencv-python
+pyyaml
+bchlib
+matplotlib
+albumentations
+tqdm
