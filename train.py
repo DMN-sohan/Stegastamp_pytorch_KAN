@@ -148,10 +148,15 @@ def main():
                         "min_secret_loss": args.min_secret_loss,
                     },
                     os.path.join(
-                        args.checkpoints_path, "last_timeout", f"{global_step}_checkpoint_timeout.pth"
+                        args.checkpoints_path, f"{global_step}_checkpoint_timeout.pth"
                     ),
                 )
                 exit(0)
+
+            if global_step % 10 == 0:
+                writer.add_scalar("Train_Loss/Total", loss.item(), global_step)
+                writer.add_scalar("Train_Loss/Secret", secret_loss.item(), global_step)
+                writer.add_scalar("Train_Loss/Discriminator", D_loss.item(), global_step)
 
             if global_step % 100 == 0:
                 

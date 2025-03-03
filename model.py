@@ -436,7 +436,7 @@ def build_model(encoder, decoder, discriminator, lpips_fn, secret_input, image_i
     writer.add_scalar('loss/enc_max', torch.max(encoded_warped), global_step)
 
 
-    if global_step % 20 == 0:
+    if global_step % 10 == 0:
         writer.add_image('input/image_input', image_input[0], global_step)
         writer.add_image('input/image_warped', input_warped[0], global_step)
         writer.add_image('encoded/encoded_warped', torch.clamp(encoded_warped[0], min=0, max=1), global_step)
@@ -444,5 +444,6 @@ def build_model(encoder, decoder, discriminator, lpips_fn, secret_input, image_i
         writer.add_image('encoded/encoded_image', torch.clamp(encoded_image[0], min=0, max=1), global_step)
         writer.add_image('transformed/transformed_image', transformed_image[0], global_step)
         writer.add_image('transformed/test', test_transform[0], global_step)
+
     return loss, secret_loss, D_loss, bit_acc, str_acc
 
