@@ -40,10 +40,10 @@ if not os.path.exists(args.saved_models):
 
 
 def main():
-    torch.manual_seed(args.seed)
+    torch.manual_seed(args.torch_seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    np.random.seed(2)
+    np.random.seed(args.numpy_seed)
 
     log_path = os.path.join(args.logs_path, str(args.exp_name))
     writer = SummaryWriter(log_path)
