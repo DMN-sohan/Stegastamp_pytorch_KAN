@@ -11,7 +11,7 @@ exp_name: Torch
 secret_size: 100
 num_steps: 140_000
 batch_size: 4
-lr: 0.0001
+lr: 0.00001
 l2_loss_scale: 2
 l2_loss_ramp: 15_000
 l2_edge_gain: 10
