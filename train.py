@@ -94,6 +94,7 @@ def main():
             lpips_loss_scale = min(args.lpips_loss_scale * global_step / args.lpips_loss_ramp, args.lpips_loss_scale)
             secret_loss_scale = min(args.secret_loss_scale * global_step / args.secret_loss_ramp,
                                     args.secret_loss_scale)
+            G_loss_scale = min(args.G_loss_scale * global_step / args.G_loss_ramp, args.G_loss_scale)
 
             rnd_tran = min(args.rnd_trans * global_step / args.rnd_trans_ramp, args.rnd_trans)
             rnd_tran = np.random.uniform() * rnd_tran
