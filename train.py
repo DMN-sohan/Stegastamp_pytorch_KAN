@@ -91,6 +91,7 @@ def main():
                 secret_input = secret_input.cuda()
             no_im_loss = global_step < args.no_im_loss_steps
             l2_loss_scale = min(args.l2_loss_scale * global_step / args.l2_loss_ramp, args.l2_loss_scale)
+            lpips_loss_scale = min(args.lpips_loss_scale * global_step / args.lpips_loss_ramp, args.lpips_loss_scale)
             secret_loss_scale = min(args.secret_loss_scale * global_step / args.secret_loss_ramp,
                                     args.secret_loss_scale)
 
