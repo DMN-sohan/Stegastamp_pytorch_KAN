@@ -10,7 +10,7 @@ from kornia import color
 import torch.nn.functional as F
 import warnings
 warnings.filterwarnings('ignore')
-import kan_unet_parts as UNet
+
 from torchvision import transforms
 
 
@@ -120,8 +120,14 @@ class StegaStampEncoder(nn.Module):
 
 
 class StegaStampEncoderUnet(nn.Module):
-    def __init__(self, bilinear=False):
+    def __init__(self, bilinear=False, KAN=False):
         super(StegaStampEncoderUnet, self).__init__()
+
+        if KAN:
+            import kan_unet_parts as UNet
+        elif not KAN:
+            import unet_parts as UNet
+
         self.secret_dense = Dense(100, 7500, activation='relu', kernel_initializer='he_normal')
 
         self.conv1 = nn.Conv2d(6, 6, 3, padding=8)
@@ -210,8 +216,14 @@ class StegaStampDecoder(nn.Module):
 
 
 class StegaStampDecoderUnet(nn.Module):
-    def __init__(self, secret_size=100):
+    def __init__(self, secret_size=100, KAN=False):
         super(StegaStampDecoderUnet, self).__init__()
+        
+        if KAN:
+            import kan_unet_parts as UNet
+        elif not KAN:
+            import unet_parts as UNet
+
         self.secret_size = secret_size
         self.stn = SpatialTransformerNetwork()
         self.decoder = nn.Sequential(

@@ -35,7 +35,7 @@ hsv_h_scale: 1
 hsv_s_scale: 1
 hsv_v_scale: 5
 
-no_gan: True
+no_gan: False
 rnd_trans: 0.1
 rnd_bri: 0.3
 rnd_noise: 0.02
@@ -57,3 +57,5 @@ pretrained: None
 min_loss: 1_000 # set high value so it won't be saved.
 min_secret_loss: 1_000 # set high value so it won't be saved.
 seed: 0
+
+KAN: True

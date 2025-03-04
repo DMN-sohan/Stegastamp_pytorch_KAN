@@ -52,8 +52,10 @@ def main():
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
     # encoder = model.StegaStampEncoder()   8.1.2023
-    encoder = model.StegaStampEncoderUnet()
-    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size)
+
+    encoder = model.StegaStampEncoderUnet(KAN=args.KAN)
+    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size,KAN=args.KAN)
+
     discriminator = model.Discriminator()
     lpips_alex = lpips.LPIPS(net="alex", verbose=False)
     if args.cuda:
