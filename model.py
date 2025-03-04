@@ -227,34 +227,34 @@ class StegaStampDecoderUnet(nn.Module):
         self.secret_size = secret_size
         self.stn = SpatialTransformerNetwork()
         self.decoder = nn.Sequential(
-            # Conv2D(3, 32, 3, strides=2, activation='relu'),
-            # Conv2D(32, 32, 3, activation='relu'),
-            # Conv2D(32, 64, 3, strides=2, activation='relu'),
-            # Conv2D(64, 64, 3, activation='relu'),
-            # Conv2D(64, 64, 3, strides=2, activation='relu'),
-            # Conv2D(64, 128, 3, strides=2, activation='relu'),
-            # Conv2D(128, 128, 3, strides=2, activation='relu'),
-            # Flatten(),
-            # Dense(21632, 512, activation='relu'),
-            # Dense(512, secret_size, activation=None)
-            nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1),  # PyTorch Conv2d
-            nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(128, 128, kernel_size=3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Flatten(),
-            nn.Linear(128 * 4 * 4, 512),  # Adapted size based on feature map
-            nn.ReLU(),
-            nn.Linear(512, secret_size)  # No activation
+            Conv2D(3, 32, 3, strides=2, activation='relu'),
+            Conv2D(32, 32, 3, activation='relu'),
+            Conv2D(32, 64, 3, strides=2, activation='relu'),
+            Conv2D(64, 64, 3, activation='relu'),
+            Conv2D(64, 64, 3, strides=2, activation='relu'),
+            Conv2D(64, 128, 3, strides=2, activation='relu'),
+            Conv2D(128, 128, 3, strides=2, activation='relu'),
+            Flatten(),
+            Dense(21632, 512, activation='relu'),
+            Dense(512, secret_size, activation=None)
+            # nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1),  # PyTorch Conv2d
+            # nn.ReLU(),
+            # nn.Conv2d(32, 32, kernel_size=3, padding=1),
+            # nn.ReLU(),
+            # nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
+            # nn.ReLU(),
+            # nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            # nn.ReLU(),
+            # nn.Conv2d(64, 64, kernel_size=3, stride=2, padding=1),
+            # nn.ReLU(),
+            # nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
+            # nn.ReLU(),
+            # nn.Conv2d(128, 128, kernel_size=3, stride=2, padding=1),
+            # nn.ReLU(),
+            # nn.Flatten(),
+            # nn.Linear(128 * 4 * 4, 512),  # Adapted size based on feature map
+            # nn.ReLU(),
+            # nn.Linear(512, secret_size)  # No activation
         )
 
     def forward(self, image):
