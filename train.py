@@ -54,7 +54,7 @@ def main():
     # encoder = model.StegaStampEncoder()   8.1.2023
 
     encoder = model.StegaStampEncoderUnet(KAN=args.KAN)
-    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size,KAN=args.KAN)
+    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size, KAN=args.KAN)
 
     discriminator = model.Discriminator()
     lpips_alex = lpips.LPIPS(net="alex", verbose=False)
