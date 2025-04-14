@@ -237,24 +237,6 @@ class StegaStampDecoderUnet(nn.Module):
             Flatten(),
             Dense(21632, 512, activation='relu'),
             Dense(512, secret_size, activation=None)
-            # nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1),  # PyTorch Conv2d
-            # nn.ReLU(),
-            # nn.Conv2d(32, 32, kernel_size=3, padding=1),
-            # nn.ReLU(),
-            # nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
-            # nn.ReLU(),
-            # nn.Conv2d(64, 64, kernel_size=3, padding=1),
-            # nn.ReLU(),
-            # nn.Conv2d(64, 64, kernel_size=3, stride=2, padding=1),
-            # nn.ReLU(),
-            # nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
-            # nn.ReLU(),
-            # nn.Conv2d(128, 128, kernel_size=3, stride=2, padding=1),
-            # nn.ReLU(),
-            # nn.Flatten(),
-            # nn.Linear(128 * 4 * 4, 512),  # Adapted size based on feature map
-            # nn.ReLU(),
-            # nn.Linear(512, secret_size)  # No activation
         )
 
     def forward(self, image):
@@ -405,7 +387,7 @@ def build_model(encoder, decoder, discriminator, lpips_fn, secret_input, image_i
     normalized_encoded = encoded_image * 2 - 1
     lpips_loss = torch.mean(lpips_fn(normalized_input, normalized_encoded))
 
-    cross_entropy = nn.BCEWithLogitsLoss()
+    cross_entropy = nn.BCELoss()
     if args.cuda:
         cross_entropy = cross_entropy.cuda()
     secret_loss = cross_entropy(decoded_secret, secret_input)
