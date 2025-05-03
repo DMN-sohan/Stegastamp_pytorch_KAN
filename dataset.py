@@ -5,7 +5,8 @@ from PIL import Image, ImageOps
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 import torch
-
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 class StegaData(Dataset):
     def __init__(self, data_path, secret_size=100, size=(400, 400)):
