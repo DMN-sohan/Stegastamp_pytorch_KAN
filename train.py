@@ -50,15 +50,13 @@ def main():
     infoMessage0('Loading data')
     dataset = StegaData(args.train_path, args.secret_size, size=(IMAGE_SIZE, IMAGE_SIZE))
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
+    loader_iter = iter(dataloader)  # Initialize iterator once
 
-    # encoder = model.StegaStampEncoder()   8.1.2023
+    encoder = model.StegaStampEncoderUnet(KAN=args.KAN)
+    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size, KAN=args.KAN)
 
-    
-    encoder = model.StegaStampEncoder()
-    decoder = model.StegaStampDecoder(secret_size=args.secret_size)
-
-    # encoder = model.StegaStampEncoderUnet(KAN=args.KAN)
-    # decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size, KAN=args.KAN)
+    # encoder = model.StegaStampEncoder()
+    # decoder = model.StegaStampDecoder(secret_size=args.secret_size)
 
     discriminator = model.Discriminator()
     lpips_alex = lpips.LPIPS(net="alex", verbose=False)
@@ -84,17 +82,23 @@ def main():
     global_step = 0
 
     MAX_TRAINING_TIME = 11.5 * 60 * 60  # 11.5 hours in seconds
-
     start_time = time.time()
 
     while global_step < args.num_steps:
         for _ in range(min(total_steps, args.num_steps - global_step)):
             step_start_time = time.time()
 
-            image_input, secret_input = next(iter(dataloader))
+            # Fetch next batch from persistent iterator
+            try:
+                image_input, secret_input = next(loader_iter)
+            except StopIteration:
+                loader_iter = iter(dataloader)
+                image_input, secret_input = next(loader_iter)
+
             if args.cuda:
                 image_input = image_input.cuda()
                 secret_input = secret_input.cuda()
+
             no_im_loss = global_step < args.no_im_loss_steps
             l2_loss_scale = min(args.l2_loss_scale * global_step / args.l2_loss_ramp, args.l2_loss_scale)
             lpips_loss_scale = min(args.lpips_loss_scale * global_step / args.lpips_loss_ramp, args.lpips_loss_scale)
@@ -167,18 +171,14 @@ def main():
                 writer.add_scalar("Train_Loss/Discriminator", D_loss.item(), global_step)
 
             if global_step % 100 == 0:
-                
-                # print(f"{global_step}/{args.num_steps} loss_scales = [l2_loss_scale = {l2_loss_scale}, lpips_loss_scale = {lpips_loss_scale}, secret_loss_scale = {secret_loss_scale}]")
                 print(
                     f"Step: {global_step}, Time per Step: {step_time:.2f} seconds, ETA: {eta}, Loss = {loss.item():.4f}, Discriminator Loss = {D_loss.item():.4f}"
                 )
 
-            # Get checkpoints:
             if global_step % CHECKPOINT_MARK_1 == 0:
                 torch.save(encoder, os.path.join(args.saved_models, "encoder.pth"))
                 torch.save(decoder, os.path.join(args.saved_models, "decoder.pth"))
 
-            # save checkpoint of best image loss and secret loss
             if global_step > CHECKPOINT_MARK_2:
                 if loss < args.min_loss:
                     args.min_loss = loss
@@ -197,4 +197,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
