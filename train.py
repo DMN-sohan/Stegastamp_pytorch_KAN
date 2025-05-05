@@ -52,11 +52,11 @@ def main():
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
     loader_iter = iter(dataloader)  # Initialize iterator once
 
-    encoder = model.StegaStampEncoderUnet(KAN=args.KAN)
-    decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size, KAN=args.KAN)
+    # encoder = model.StegaStampEncoderUnet(KAN=args.KAN)
+    # decoder = model.StegaStampDecoderUnet(secret_size=args.secret_size, KAN=args.KAN)
 
-    # encoder = model.StegaStampEncoder()
-    # decoder = model.StegaStampDecoder(secret_size=args.secret_size)
+    encoder = model.StegaStampEncoder()
+    decoder = model.StegaStampDecoder(secret_size=args.secret_size)
 
     discriminator = model.Discriminator()
     lpips_alex = lpips.LPIPS(net="alex", verbose=False)

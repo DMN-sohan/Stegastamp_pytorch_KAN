@@ -57,6 +57,6 @@ pretrained: None
 min_loss: 1_000 # set high value so it won't be saved.
 min_secret_loss: 1_000 # set high value so it won't be saved.
 torch_seed: 0
-numpy_seed : 18
+numpy_seed : 2
 
 KAN: False

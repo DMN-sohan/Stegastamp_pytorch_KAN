@@ -431,13 +431,6 @@ def build_model(encoder, decoder, discriminator, lpips_fn, secret_input, image_i
 
     if not args.no_gan:
         loss += loss_scales[3] * G_loss
-
-    mag = residual.abs().mean()
-    min_mag = 1e-3   # threshold for “non‑blank” residual
-    lambda_r = 10.0  # weight of penalty
-    penalty = torch.relu(min_mag - mag)
-
-    loss = loss + lambda_r * penalty
     
 
     writer.add_scalar('loss/image_loss', image_loss, global_step)
@@ -445,7 +438,6 @@ def build_model(encoder, decoder, discriminator, lpips_fn, secret_input, image_i
     writer.add_scalar('loss/secret_loss', secret_loss, global_step)
     writer.add_scalar('loss/G_loss', G_loss, global_step)
     writer.add_scalar('loss/loss', loss, global_step)
-    writer.add_scalar('loss/residual_penalty', lambda_r * penalty, global_step)
 
     writer.add_scalar('accuracy/bit', bit_acc, global_step)
     writer.add_scalar('accuracy/string', str_acc, global_step)
